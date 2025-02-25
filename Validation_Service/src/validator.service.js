@@ -6,14 +6,8 @@ async function validate(proofOfTask) {
 
   try {
       const taskResult = await dalService.getIPfsTask(proofOfTask);
-      var data = await oracleService.getPrice("ETHUSDT");
-      const upperBound = data.price * 1.05;
-      const lowerBound = data.price * 0.95;
-      let isApproved = true;
-      if (taskResult.price > upperBound || taskResult.price < lowerBound) {
-        isApproved = false;
-      }
-      return isApproved;
+      var data = await oracleService.getPrice(taskResult.lat, taskResult.long, taskResult.time);
+      return data.isThereFire == taskResult.isThereFire;
     } catch (err) {
       console.error(err?.message);
       return false;
