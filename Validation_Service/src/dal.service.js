@@ -11,8 +11,10 @@ function init() {
 async function getIPfsTask(cid) {
     const { data } = await axios.get(ipfsHost + cid);
     return {
-      symbol: data.symbol,
-      price: parseFloat(data.price),
+      lat: parseFloat(data.lat),
+      long: parseFloat(data.long),
+      time: parseFloat(data.time),
+      isThereFire: data.isThereFire,
     };
   }  
   
