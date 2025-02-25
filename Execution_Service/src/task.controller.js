@@ -15,9 +15,7 @@ router.post("/execute", async (req, res) => {
         console.log(`taskDefinitionId: ${taskDefinitionId}`);
 
         const queryParams = req.query;
-      
         const { lat, long, time } = queryParams;
-      
 
         const result = await oracleService.isThereFire(lat, long, time);
         const cid = await dalService.publishJSONToIpfs(result);
