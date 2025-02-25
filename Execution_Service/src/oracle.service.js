@@ -1,4 +1,3 @@
-require('dotenv').config();
 const axios = require("axios");
 
 function degreesToRadians(degrees) {
@@ -27,7 +26,7 @@ const URL = "https://firms.modaps.eosdis.nasa.gov/data/active_fire/suomi-npp-vii
  * @param {number} lat short for lattitude
  * @param {number} long short for longitude
  * @param {number} time unix timestamp, should be within last 7 days
- * @returns object with attributes {lat, long, time, isThereFire: bool} 
+ * @returns object with attributes {req : {lat, long, time}, isThereFire: bool} 
  */
 async function isThereFire(lat, long, time) {
   // check if lattitude and longitude are in lower 48 + Hawaii, but we don't need to check that
@@ -69,7 +68,10 @@ async function isThereFire(lat, long, time) {
     }
   }
   let isThereFire = confidence == "high" || confidence == "nominal";
-  return {lat, long, time, isThereFire};
+  return {
+    req: {lat, long, time},
+    isThereFire
+  };
 }
   
 module.exports = {
