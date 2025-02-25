@@ -14,10 +14,14 @@ router.post("/execute", async (req, res) => {
         var taskDefinitionId = Number(req.body.taskDefinitionId) || 0;
         console.log(`taskDefinitionId: ${taskDefinitionId}`);
 
-        const result = await oracleService.getPrice("ETHUSDT");
-        result.price = req.body.fakePrice || result.price;
+        const queryParams = req.query;
+      
+        const { lat, long, time } = queryParams;
+      
+
+        const result = await oracleService.isThereFire(lat, long, time);
         const cid = await dalService.publishJSONToIpfs(result);
-        const data = "hello";
+        const data = JSON.stringify(queryParams);
         await dalService.sendTask(cid, data, taskDefinitionId);
         return res.status(200).send(new CustomResponse({proofOfTask: cid, data: data, taskDefinitionId: taskDefinitionId}, "Task executed successfully"));
     } catch (error) {
