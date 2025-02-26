@@ -1,3 +1,11 @@
+# BlazeSentry AVS - UCLA submission for Eigengames Hackathon
+
+Mission: Powering Verifiable and Trustless Onchain Fire Insurance with an Eigenlayer AVS.
+
+Video: 
+
+Technical details: We created an AVS by adapting the Othentic framework to handle wildfire data and built a dapp to interface with our AVS. 
+
 # Simple Price Oracle AVS Example
 
 This repository demonstrates how to implement a simple price oracle AVS using the Othentic Stack.
