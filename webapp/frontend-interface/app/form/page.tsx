@@ -1,38 +1,12 @@
 "use client"
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import FormControl from '@mui/material/FormControl';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
-import MuiCard from '@mui/material/Card';
-import axios from "axios";
-import { styled } from '@mui/material/styles';
-import LinearProgress from '@mui/material/LinearProgress';
+import Form from "./form";
 import Navbar from "../../components/topbar";
-import AppTheme from './styling/AppTheme';
-
-const Card = styled(MuiCard)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignSelf: 'center',
-  width: '100%',
-  padding: theme.spacing(4),
-  gap: theme.spacing(2),
-  margin: "auto",
-  //marginBottom: "2%",
-  [theme.breakpoints.up('sm')]: {
-    maxWidth: '450px',
-  },
-  boxShadow:
-    'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
-  ...theme.applyStyles('dark', {
-    boxShadow:
-      'hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px',
-  }),
-}));
+import AppTheme from "./styling/AppTheme";
+import CssBaseline from '@mui/material/CssBaseline';
+import Card from "./card";
+import { styled } from '@mui/material/styles';
+import { Stack } from '@mui/material';
 
 const SearchContainer = styled(Stack)(({ theme }) => ({
   //height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
@@ -57,92 +31,31 @@ const SearchContainer = styled(Stack)(({ theme }) => ({
   },
 }));
 
-export default function Form(props) {
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [isThereFire, setIsThereFire] = React.useState();
+function Page(props){
+  const [position, setPosition] = React.useState(null);
+  const [isThereFire, setIsThereFire] = React.useState("not set");  // 3 possible vals, true, false, "not set"
   const [globalIpfsLink, setGlobalIpfsLink] = React.useState();
-  const handleSubmit = async (event) => {
-    event.preventDefault();  // stop default refresh
-    setIsLoading(true);
-    const data = new FormData(event.currentTarget);
-    let lat = data.get("lat");
-    let long = data.get("long");
-    let url = `http://localhost:4003/task/execute?lat=${lat}&long=${long}&time=${Date.now() / 1000}`;
-    let resp = await axios.post(url);
-    console.log(resp.data);
-    // get ipfs hash from response, axios resp -> data becomes othentic custom resp
-    // othentic custom resp -> data is object we want
-    // object we want -> proofOfTask is what we want
-    let ipfsHash = resp.data.data.proofOfTask;
-    let ipfsLink = `https://ipfs.io/ipfs/${ipfsHash}`;
-    setGlobalIpfsLink(ipfsLink);
-    let ipfsResp = await axios.get(ipfsLink);
-    setIsThereFire(ipfsResp.data.isThereFire);
-    setIsLoading(false);
-  };
   return (
     <>
-    <Navbar />
-    <AppTheme {...props}>
-      <CssBaseline enableColorScheme />
-      <SearchContainer direction="column" justifyContent="space-between">
-        <Card variant="outlined" sx={{margin: "10%"}}>
-          <Typography
-            component="h1"
-            variant="h4"
-            sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
-          >
-            Is there a fire here?
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              width: '100%',
-              gap: 2,
-            }}
-          >
-            <FormControl>
-              <TextField
-                id="lat"
-                name="lat"
-                placeholder="Lattitude"
-                autoFocus
-                required
-                fullWidth
-                variant="outlined"
-                color={'primary'}
-              />
-              <TextField
-                id="long"
-                name="long"
-                placeholder="Longitude"
-                autoFocus
-                required
-                fullWidth
-                variant="outlined"
-                color={'primary'}
-              />
-            </FormControl>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-            >
-              Find out
-            </Button>
-          </Box>
-          {isLoading ? (<LinearProgress />) : (<></>)}
+      <Navbar />
+      <AppTheme {...props}>
+        <CssBaseline enableColorScheme />
+        <SearchContainer direction="column" justifyContent="space-between">
+          <Form 
+            position={position} 
+            setGlobalIpfsLink={setGlobalIpfsLink}
+            setIsThereFire={setIsThereFire}
+            setPosition={setPosition}
+          />
+        </SearchContainer>
+        <Card variant="outlined">
+          {isThereFire == "not set" ? "Please pick a location" : 
+            (<a href={globalIpfsLink} target="_blank">There is {isThereFire ? "" : "not"} a fire here</a>)
+          }
         </Card>
-      </SearchContainer>
-      <Card variant="outlined">
-        <a href={globalIpfsLink} target="_blank">There is {isThereFire ? "" : "not"} a fire here</a>
-      </Card>
-    </AppTheme>
+      </AppTheme>
     </>
   );
-"use client"}
+}
 
+export default Page;
