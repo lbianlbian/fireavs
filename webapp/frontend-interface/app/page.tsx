@@ -39,17 +39,17 @@ export default function Page() {
         <Navbar />
         {/* Hero Section */}
         <main className="min-h-screen flex flex-col items-center justify-center text-center px-4">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight">Fyre Chain</h1>
-          <h2 className="text-xl md:text-2xl text-orange-400 mb-6 font-medium">Solution to Validated Fire Data</h2>
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight">BlazeSentry AVS</h1>
           <p className="max-w-2xl text-gray-200 mb-8 text-lg">
-            AVS Secured and Verified. yada yada yada yada yada yada yada yada yada yada yada yada
+            Powering Verifiable and Trustless Fire Insurance with an Eigenlayer AVS. 
           </p>
           <button
             className="px-8 py-3 bg-orange-500 text-white rounded-lg font-medium 
                      hover:bg-orange-400 transform hover:scale-105 transition-all
                      shadow-lg hover:shadow-orange-500/25"
+            onClick={window.open("/form", "_self")}
           >
-            Submit Your First Request
+            Verify Fire Data
           </button>
         </main>
       </div>

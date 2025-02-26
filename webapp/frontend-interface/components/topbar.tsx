@@ -6,16 +6,16 @@ function Navbar(){
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
             <div className="flex-none">
             <Link href="/" className="text-orange-500 font-bold text-xl hover:text-orange-400 transition-colors">
-            Fyre Chain
+            BlazeSentry AVS
             </Link>
             </div>
             <nav className="hidden md:flex gap-4 ml-auto">
             {" "}
             <Link href="/form" className="px-4 py-2 text-white hover:text-orange-400 transition-colors">
-                Submission Request
+                Verify Fire Data 
             </Link>
             <Link href="/operators" className="px-4 py-2 text-white hover:text-orange-400 transition-colors">
-                Active Operators maybe remove
+                Active Operators implement if easy
             </Link>
             <Link href="/restake" className="px-4 py-2 text-white hover:text-orange-400 transition-colors">
                 Restake With Us
