@@ -52,6 +52,10 @@ function Page(props){
           {isThereFire == "not set" ? "Please pick a location" : 
             (<a href={globalIpfsLink} target="_blank">There is {isThereFire ? "" : "not"} a fire here</a>)
           }
+          <br></br>
+          {
+            "Current Query Rate: 0.0001 Holesky / Query "
+          }
         </Card>
       </AppTheme>
     </>
