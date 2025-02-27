@@ -2,13 +2,19 @@
 
 Mission: Powering Verifiable and Trustless Onchain Fire Insurance with an Eigenlayer AVS.
 
-Video: 
+Technical details: We created an AVS by adapting the Othentic framework to handle wildfire data and built a dapp to interface with our AVS.
+The dapp is stored in the webapp directory. 
+Currently, all operators use NASA to obtain the fire data, but we would make them use different methods for proper decentralization in the future. 
 
-Technical details: We created an AVS by adapting the Othentic framework to handle wildfire data and built a dapp to interface with our AVS. 
+### Autonome Fyrebot Agent 
 
-# Simple Price Oracle AVS Example
+Autonome Deployment: fyreport-aixdmk
 
-This repository demonstrates how to implement a simple price oracle AVS using the Othentic Stack.
+Twitter Handle: @BlazeSentry_AVS
+
+Deployed a custom AI Agent on Autonome's Eliza framework and fine tuned through recent fire data. Agent will tweet about a confirmed fire event with a possible fire severity and spread prediction. 
+
+# Othentic Stack Setup Instructions
 
 ---
 
@@ -25,7 +31,7 @@ This repository demonstrates how to implement a simple price oracle AVS using th
 
 ## Overview
 
-The Simple Price Oracle AVS Example demonstrates how to deploy a minimal AVS using Othentic Stack.
+This repository demonstrates how to deploy a fire data AVS using Othentic Stack.
 
 
 
@@ -37,13 +43,13 @@ The Simple Price Oracle AVS Example demonstrates how to deploy a minimal AVS usi
 ## Project Structure
 
 ```mdx
-📂 simple-price-oracle-avs-example
+📂 fireavs
 ├── 📂 Execution_Service         # Implements Task execution logic - Express JS Backend
 │   ├── 📂 config/
-│   │   └── app.config.js        # An Express.js app setup with dotenv, and a task controller route for handling `/task` endpoints.
+│   │   └── app.config.js        # An Express.js app setup with dotenv, and a task controller route for handling `/task` endpoints. API takes lat, long, and time query parameters. 
 │   ├── 📂 src/
 │   │   └── dal.service.js       # A module that interacts with Pinata for IPFS uploads
-│   │   ├── oracle.service.js    # A utility module to fetch the current price of a cryptocurrency pair from the Binance API
+│   │   ├── oracle.service.js    # A utility module to fetch the latest fire data and determine whether there is a fire at the input location (lat and long) + time. 
 │   │   ├── task.controller.js   # An Express.js router handling a `/execute` POST endpoint
 │   │   ├── 📂 utils             # Defines two custom classes, CustomResponse and CustomError, for standardizing API responses
 │   ├── Dockerfile               # A Dockerfile that sets up a Node.js (22.6) environment, exposes port 8080, and runs the application via index.js
@@ -55,9 +61,9 @@ The Simple Price Oracle AVS Example demonstrates how to deploy a minimal AVS usi
 │   │   └── app.config.js         # An Express.js app setup with a task controller route for handling `/task` endpoints.
 │   ├── 📂 src/
 │   │   └── dal.service.js        # A module that interacts with Pinata for IPFS uploads
-│   │   ├── oracle.service.js     # A utility module to fetch the current price of a cryptocurrency pair from the Binance API
+│   │   ├── oracle.service.js     # A utility module to fetch the latest fire data and determine whether there is a fire at the input location (lat and long) + time. 
 │   │   ├── task.controller.js    # An Express.js router handling a `/validate` POST endpoint
-│   │   ├── validator.service.js  # A validation module that checks if a task result from IPFS matches the ETH/USDT price within a 5% margin.
+│   │   ├── validator.service.js  # A validation module that checks if a task result from IPFS matches the validator's own fire data. 
 │   │   ├── 📂 utils              # Defines two custom classes, CustomResponse and CustomError, for standardizing API responses.
 │   ├── Dockerfile                # A Dockerfile that sets up a Node.js (22.6) environment, exposes port 8080, and runs the application via index.js.
 |   ├── index.js                  # A Node.js server entry point that initializes the DAL service, loads the app configuration, and starts the server on the specified port.
@@ -79,14 +85,16 @@ The Performer node executes tasks using the Task Execution Service and sends the
 Attester Nodes validate task execution through the Validation Service. Based on the Validation Service's response, attesters sign the tasks. In this AVS:
 
 Task Execution logic:
-- Fetch the ETHUSDT price.
+- Fetch data on locations of fires
+- Filter data to the given lattitude, longitude, and unix timestamp
+- Determine whether or not there is a fire here. If not found, there is no fire. 
 - Store the result in IPFS.
 - Share the IPFS CID as proof.
 
 Validation Service logic:
-- Retrieve the price from IPFS using the CID.
-- Get the expected ETHUSDT price.
-- Validate by comparing the actual and expected prices within an acceptable margin.
+- Retrieve the result of whether or not there is a fire from IPFS using the CID.
+- Get the expected fire status.
+- Validate by comparing the actual and expected fire statuses.
 ---
 
 ## Prerequisites
@@ -101,8 +109,8 @@ Validation Service logic:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/Othentic-Labs/simple-price-oracle-avs-example.git
-   cd simple-price-oracle-avs-example
+   git clone https://github.com/lbianlbian/fireavs.git
+   cd fireavs
    ```
 
 2. Install Othentic CLI:
@@ -116,16 +124,6 @@ Validation Service logic:
 Follow the steps in the official documentation's [Quickstart](https://docs.othentic.xyz/main/avs-framework/quick-start#steps) Guide for setup and deployment.
 
 ### Next
-Modify the different configurations, tailor the task execution logic as per your use case, and run the AVS.
+
 
 Happy Building! 🚀
-
-
-
-### Autonome Fyrebot Agent 
-
-Autonome Deployment: fyreport-aixdmk
-
-Twitter Handle: @BlazeSentry_AVS
-
-Deployed a custom AI Agent on Autonome's Eliza framework and fine tuned through recent fire data. Agent will tweet about a confirmed fire event with a possible fire severity and spread prediction. 
