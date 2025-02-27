@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react"
 import Navbar from "../components/topbar";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const [scrollY, setScrollY] = useState(0)
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -14,6 +16,11 @@ export default function Page() {
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
+
+  // Correct way to handle the button click
+  const handleButtonClick = () => {
+    router.push("/form");
+  };
 
   return (
     <div className="min-h-screen relative">
@@ -47,7 +54,7 @@ export default function Page() {
             className="px-8 py-3 bg-orange-500 text-white rounded-lg font-medium 
                      hover:bg-orange-400 transform hover:scale-105 transition-all
                      shadow-lg hover:shadow-orange-500/25"
-            onClick={window.open("/form", "_self")}
+            onClick={handleButtonClick}
           >
             Verify Fire Data
           </button>

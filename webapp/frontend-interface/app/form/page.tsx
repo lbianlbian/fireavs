@@ -54,7 +54,7 @@ function Page(props){
           }
           <br></br>
           {
-            "Current Query Rate: 0.0001 Holesky / Query "
+            "Current Query Rate: 0.001 POL / Query "
           }
         </Card>
       </AppTheme>

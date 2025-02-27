@@ -14,7 +14,10 @@ import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import Stack from '@mui/material/Stack';
 
-export default function Form({setGlobalIpfsLink, setIsThereFire, position, setPosition}) {
+// Initialize position state with default values to avoid uncontrolled/controlled warnings
+const DEFAULT_POSITION = { lat: '', lng: '' };
+
+export default function Form({setGlobalIpfsLink, setIsThereFire, position = DEFAULT_POSITION, setPosition}) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [account, setAccount] = React.useState(null);
   const [isPaid, setIsPaid] = React.useState(false);
@@ -25,10 +28,9 @@ export default function Form({setGlobalIpfsLink, setIsThereFire, position, setPo
   });
 
   const RECIPIENT_WALLET = '0xEcf8a1e7C5f43b4316DEa596Bd06952172d6e94e'; 
-  const REQUIRED_AMOUNT = '0.00'; 
+  const REQUIRED_AMOUNT = '0.01'; 
   const ACCEPTED_CHAINS = {
-    1: 'Ethereum Mainnet',
-    17000: 'Holesky Testnet'
+    80002: 'Polygon Amoy Testnet'
   };
 
 
@@ -67,7 +69,28 @@ export default function Form({setGlobalIpfsLink, setIsThereFire, position, setPo
       const decimalChainId = parseInt(chainId, 16);
       
       if (!ACCEPTED_CHAINS[decimalChainId]) {
-        showSnackbar(`Please switch to Ethereum Mainnet or Holesky Testnet in MetaMask`, 'warning');
+        showSnackbar(`Please switch to Polygon Amoy Testnet in MetaMask`, 'warning');
+        
+        // Prompt user to add Polygon Amoy if not available
+        try {
+          await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [{
+              chainId: '0x13882', // 80002 in hex
+              chainName: 'Polygon Amoy Testnet',
+              nativeCurrency: {
+                name: 'POL',
+                symbol: 'POL',
+                decimals: 18
+              },
+              rpcUrls: ['https://rpc-amoy.polygon.technology/'],
+              blockExplorerUrls: ['https://amoy.polygonscan.com/']
+            }]
+          });
+          showSnackbar('Added Polygon Amoy Testnet to MetaMask. Please switch networks.', 'info');
+        } catch (addError) {
+          console.error('Failed to add network:', addError);
+        }
       } else {
         showSnackbar(`Connected to ${getNetworkName(decimalChainId)}`, 'success');
       }
@@ -85,7 +108,7 @@ export default function Form({setGlobalIpfsLink, setIsThereFire, position, setPo
       if (ACCEPTED_CHAINS[decimalChainId]) {
         showSnackbar(`Switched to ${getNetworkName(decimalChainId)}`, 'success');
       } else {
-        showSnackbar(`Please switch to Ethereum Mainnet or Holesky Testnet`, 'warning');
+        showSnackbar(`Please switch to Polygon Amoy Testnet`, 'warning');
       }
     });
   };
@@ -100,9 +123,27 @@ export default function Form({setGlobalIpfsLink, setIsThereFire, position, setPo
       setIsLoading(true);
       let provider;
       if (window.ethereum) {
-        provider = new ethers.providers.Web3Provider(window.ethereum);
+        // Check if using ethers v6
+        if (ethers.BrowserProvider) {
+          provider = new ethers.BrowserProvider(window.ethereum);
+        } 
+        // Fallback for ethers v5
+        else if (ethers.providers && ethers.providers.Web3Provider) {
+          provider = new ethers.providers.Web3Provider(window.ethereum);
+        } else {
+          throw new Error("Incompatible ethers version");
+        }
       } else if (window.web3) {
-        provider = new ethers.providers.Web3Provider(window.web3.currentProvider);
+        // Check if using ethers v6
+        if (ethers.BrowserProvider) {
+          provider = new ethers.BrowserProvider(window.web3.currentProvider);
+        }
+        // Fallback for ethers v5
+        else if (ethers.providers && ethers.providers.Web3Provider) {
+          provider = new ethers.providers.Web3Provider(window.web3.currentProvider);
+        } else {
+          throw new Error("Incompatible ethers version");
+        }
       } else {
         throw new Error("No Ethereum browser extension detected");
       }
@@ -112,14 +153,17 @@ export default function Form({setGlobalIpfsLink, setIsThereFire, position, setPo
       const chainId = network.chainId;
       
       if (!ACCEPTED_CHAINS[chainId]) {
-        showSnackbar(`Please switch to Ethereum Mainnet or Holesky Testnet before paying`, 'error');
+        showSnackbar(`Please switch to Polygon Amoy Testnet before paying`, 'error');
         setIsLoading(false);
         return;
       }
       
-      const signer = provider.getSigner();
+      const signer = await provider.getSigner();
       
-      const amount = ethers.utils.parseEther(REQUIRED_AMOUNT);
+      // Handle both ethers v5 and v6
+      const amount = ethers.parseEther ? 
+        ethers.parseEther(REQUIRED_AMOUNT) : 
+        ethers.utils.parseEther(REQUIRED_AMOUNT);
       
       // Create transaction
       const tx = await signer.sendTransaction({
@@ -132,7 +176,7 @@ export default function Form({setGlobalIpfsLink, setIsThereFire, position, setPo
       const receipt = await tx.wait();
       
       setIsPaid(true);
-      showSnackbar(`Payment of ${REQUIRED_AMOUNT} ETH successful on ${getNetworkName(chainId)}!`, 'success');
+      showSnackbar(`Payment of ${REQUIRED_AMOUNT} POL successful on ${getNetworkName(chainId)}!`, 'success');
     } catch (error) {
       console.error('Payment failed:', error);
       showSnackbar('Payment failed. Please try again.', 'error');
@@ -181,13 +225,12 @@ export default function Form({setGlobalIpfsLink, setIsThereFire, position, setPo
   
   const handleManualChange = (event) => {
     console.log(event);
-    let currPos = {};
-    if(event.name == "lat"){
+    let currPos = { ...position }; // Clone current position to avoid mutation
+    
+    if(event.name === "lat"){
       currPos.lat = event.value;
-      currPos.lng = position.lng;
     }
     else{
-      currPos.lat = position.lat;
       currPos.lng = event.value;
     }
     setPosition(currPos);
@@ -211,7 +254,7 @@ export default function Form({setGlobalIpfsLink, setIsThereFire, position, setPo
         variant="h4"
         sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
       >
-        Is there a fire here?
+        Active Fire Query:
       </Typography>
       
       <InteractiveMap setPosition={setPosition} position={position}/>
@@ -232,7 +275,7 @@ export default function Form({setGlobalIpfsLink, setIsThereFire, position, setPo
             id="lat"
             name="lat"
             placeholder="lattitude"
-            value={position == null ? null : position.lat}
+            value={position?.lat || ''}
             autoFocus
             required
             fullWidth
@@ -244,7 +287,7 @@ export default function Form({setGlobalIpfsLink, setIsThereFire, position, setPo
             id="long"
             name="long"
             placeholder="longitude"
-            value={position == null ? null : position.lng}
+            value={position?.lng || ''}
             autoFocus
             required
             fullWidth
@@ -276,7 +319,7 @@ export default function Form({setGlobalIpfsLink, setIsThereFire, position, setPo
                 color="secondary"
                 disabled={isLoading}
               >
-                Pay {REQUIRED_AMOUNT} ETH to continue
+                Pay {REQUIRED_AMOUNT} POL to continue
               </Button>
             </Box>
           ) : (

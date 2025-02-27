@@ -14,11 +14,8 @@ function Navbar(){
             <Link href="/form" className="px-4 py-2 text-white hover:text-orange-400 transition-colors">
                 Verify Fire Data 
             </Link>
-            <Link href="/operators" className="px-4 py-2 text-white hover:text-orange-400 transition-colors">
-                Active Operators implement if easy
-            </Link>
-            <Link href="/restake" className="px-4 py-2 text-white hover:text-orange-400 transition-colors">
-                Restake With Us
+            <Link href="https://x.com/BlazeSentry_AVS" className="px-4 py-2 text-white hover:text-orange-400 transition-colors">
+                Twitter Updates 
             </Link>
             </nav>
             {/* Mobile menu button would go here */}
