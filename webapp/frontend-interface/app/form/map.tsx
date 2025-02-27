@@ -11,7 +11,7 @@ function InteractiveMap({position, setPosition}) {
       },
     });
 
-    return position == null ? null : (
+    return position == null || position.lat == null || position.lng == null ? null : (
       <Marker position={position}></Marker>
     );
   }

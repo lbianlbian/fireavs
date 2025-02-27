@@ -224,7 +224,6 @@ export default function Form({setGlobalIpfsLink, setIsThereFire, position = DEFA
   };
   
   const handleManualChange = (event) => {
-    console.log(event);
     let currPos = { ...position }; // Clone current position to avoid mutation
     
     if(event.name === "lat"){
@@ -233,7 +232,9 @@ export default function Form({setGlobalIpfsLink, setIsThereFire, position = DEFA
     else{
       currPos.lng = event.value;
     }
+    
     setPosition(currPos);
+    
   };
 
   return (
