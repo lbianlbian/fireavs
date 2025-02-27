@@ -120,3 +120,12 @@ Modify the different configurations, tailor the task execution logic as per your
 
 Happy Building! 🚀
 
+
+
+### Autonome Fyrebot Agent 
+
+Autonome Deployment: fyreport-aixdmk
+
+Twitter Handle: @BlazeSentry_AVS
+
+Deployed a custom AI Agent on Autonome's Eliza framework and fine tuned through recent fire data. Agent will tweet about a confirmed fire event with a possible fire severity and spread prediction. 
