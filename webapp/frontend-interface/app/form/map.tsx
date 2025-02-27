@@ -2,7 +2,6 @@
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 
 function InteractiveMap({position, setPosition}) {
-  console.log(position);
   function LocationMarker() {
     const map = useMapEvents({
       click(e) {
@@ -10,8 +9,9 @@ function InteractiveMap({position, setPosition}) {
         map.flyTo(e.latlng, map.getZoom());
       },
     });
-
-    return position == null || position.lat == null || position.lng == null ? null : (
+    let nullCheck = position == null || position.lat == null || position.lng == null;
+    let badNums = position == null || isNaN(position.lat) || isNaN(position.lng);
+    return nullCheck || badNums ? null : (
       <Marker position={position}></Marker>
     );
   }
