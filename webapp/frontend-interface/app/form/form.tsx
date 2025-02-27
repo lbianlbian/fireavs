@@ -28,7 +28,7 @@ export default function Form({setGlobalIpfsLink, setIsThereFire, position = DEFA
   });
 
   const RECIPIENT_WALLET = '0xEcf8a1e7C5f43b4316DEa596Bd06952172d6e94e'; 
-  const REQUIRED_AMOUNT = '0.01'; 
+  const REQUIRED_AMOUNT = '0.001'; 
   const ACCEPTED_CHAINS = {
     80002: 'Polygon Amoy Testnet'
   };
@@ -184,6 +184,34 @@ export default function Form({setGlobalIpfsLink, setIsThereFire, position = DEFA
       setIsLoading(false);
     }
   };
+  
+  // New function to send tweet when fire is detected
+  const sendTweet = async (lat, lng) => {
+    try {
+      const tweetText = `${lat}, ${lng}. Tweet about information about this location and fire history.`;
+      console.log('tweet being sent');
+      const response = await axios.post(
+        'https://autonome.alt.technology/fyreport-aixdmk/8fda1a98-e9e2-026b-94ef-b31d7d41d7d7/message',
+        {
+          text: tweetText
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Basic ZnlyZXBvcnQ6ZWlrYW1ZeFpsRA=='
+          }
+        }
+      );
+      
+      console.log('Tweet sent successfully:', response.data);
+      showSnackbar('Fire alert tweet sent successfully!', 'success');
+      return true;
+    } catch (error) {
+      console.error('Failed to send tweet:', error);
+      showSnackbar('Failed to send fire alert tweet', 'error');
+      return false;
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();  // stop default refresh
@@ -211,7 +239,13 @@ export default function Form({setGlobalIpfsLink, setIsThereFire, position = DEFA
       setGlobalIpfsLink(ipfsLink);
       
       let ipfsResp = await axios.get(ipfsLink);
-      setIsThereFire(ipfsResp.data.isThereFire);
+      const isThereFire = ipfsResp.data.isThereFire;
+      setIsThereFire(isThereFire);
+      
+      // If fire is detected, send a tweet
+      if (isThereFire) {
+        await sendTweet(lat, long);
+      }
       
       // Reset payment status after successful request
       setIsPaid(false);
