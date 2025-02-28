@@ -2,7 +2,7 @@
 
 Mission: Powering Verifiable and Trustless Onchain Fire Insurance with an Eigenlayer AVS.
 
-Technical details: We created an AVS by adapting the Othentic framework to handle wildfire data and built a dapp to interface with our AVS.
+Technical details: We created an AVS by adapting the Othentic framework to handle wildfire data and built a dapp to interface with our AVS. We also built an Autonome AI Agent to make alert tweets about verified wildfires. We also built an interface for P2P restaking to power BlazeSentry AVS.  
 The dapp is stored in the webapp directory. 
 Currently, all operators use NASA to obtain the fire data, but we would make them use different methods for proper decentralization in the future. 
 
@@ -13,6 +13,10 @@ Autonome Deployment: fyreport-aixdmk
 Twitter Handle: @BlazeSentry_AVS
 
 Deployed a custom AI Agent on Autonome's Eliza framework and fine tuned through recent fire data. Agent will tweet about a confirmed fire event with a possible fire severity and spread prediction. 
+
+### P2P Restaking
+
+Since Holesky testnet is down, we are unable to test or demonstrate this restaking functionality. The code to handle restaking is stored in webapp/frontend-interface/app/restake. It uses the unified restaking API to make it easy for restakers to ensure the operation and security of BlazeSentry and Eigenlayer as a whole. 
 
 # Othentic Stack Setup Instructions
 
