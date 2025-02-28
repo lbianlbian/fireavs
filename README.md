@@ -16,7 +16,7 @@ Deployed a custom AI Agent on Autonome's Eliza framework and fine tuned through 
 
 ### P2P Restaking
 
-Since Holesky testnet is down, we are unable to test or demonstrate this restaking functionality. The code to handle restaking is stored in webapp/frontend-interface/app/restake. It uses the unified restaking API to make it easy for restakers to ensure the operation and security of BlazeSentry and Eigenlayer as a whole. This way, anyone is empowered to help create a fair and innovative fire insurance ecosystem. 
+Since Holesky testnet is down, we are unable to test or demonstrate this restaking functionality. The code to handle restaking is stored in webapp/frontend-interface/app/restake. It uses the unified restaking API to make it easy for restakers to ensure the operation and security of BlazeSentry and Eigenlayer as a whole. This way, anyone can actively participate to help create a fair and innovative fire insurance ecosystem. 
 
 # Othentic Stack Setup Instructions
 
